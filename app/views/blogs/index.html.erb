@@ -1,0 +1,79 @@
+<div class="toppage" style="margin: 20px;">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="schedule">
+                <h3>予定一覧</h3>
+            </div>
+
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>タイトル</th>
+                        <th>日程</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% @blogs.each do |blog| %>
+                        <tr>
+                            <td><%= link_to(blog.title , blog) %></td>
+                            <td><%= blog.start_time.strftime("%m-%d") %></td>
+                        </tr>
+                    <%end%>
+                </tbody>
+            </table>
+
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#testModal" role="button">予定追加</a>
+
+        </div>
+
+        <br>
+
+        <br>
+        <div class="col-md-8">
+            <%= month_calendar events: @blogs do |date, blogs| %>
+                <%= date.day %>
+
+                <% blogs.each do |blog| %>
+                    <div>
+                        <%= link_to blog.title, blog %>
+                    </div>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+
+<%# 入力フォーム %>
+<div class="modal fade" id="testModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between">
+                <h5 class="modal-title" id="exampleModalLabel">予定追加</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <%= form_with(model: @blog, local: true) do |form| %>
+                    <div class="form-group">
+                        <label for="blog_title">タイトル</label>
+                        <%= form.text_field :title, class: "form-control", id: "blog_title" %>
+                    </div>
+                    <div class="form-group">
+                        <label for="blog_content">内容</label>
+                        <%= form.text_field :content, class: "form-control", id: "blog_content" %>
+                    </div>
+                    <div class="form-group">
+                        <label for="blog_start_time">時間</label>
+                        <%= form.datetime_select :start_time, class: "form-control", id: "blog_start_time" %>
+                    </div>
+                    <div class="form-group">
+                        <%= form.submit "追加", class: "btn btn-primary" %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
